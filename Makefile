@@ -241,8 +241,20 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
-HOSTCXXFLAGS = -O2
+
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer -std=gnu89
+HOSTCXXFLAGS = -O3
+
+# Tweaks
+TWEAK_CFLAGS += -fgcse-las \
+                -fgcse-sm \
+		-fgraphite \
+		-fgraphite-identity \
+                -ftree-loop-ivcanon \
+                -fweb
+                
+HOSTCFLAGS += $(ARCHI_CFLAGS)
+HOSTCXXFLAGS += $(ARCHI_CFLAGS)
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -342,12 +354,12 @@ CHECK		= sparse
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-CFLAGS_MODULE   =
+CFLAGS_MODULE   = $(ARCHI_CFLAGS)
 AFLAGS_MODULE   =
-LDFLAGS_MODULE  = --strip-debug
-CFLAGS_KERNEL	=
+LDFLAGS_MODULE  = --strip-debug -Wl --sort-common
+CFLAGS_KERNEL	= $(ARCHI_CFLAGS)
 AFLAGS_KERNEL	=
-CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
+CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage $(ARCHI_CFLAGS)
 
 
 # Use USERINCLUDE when you must reference the UAPI directories only.
@@ -576,7 +588,7 @@ all: vmlinux
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
 else
-KBUILD_CFLAGS	+= -O2
+KBUILD_CFLAGS	+= -O3
 endif
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
