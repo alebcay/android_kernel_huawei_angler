@@ -253,8 +253,8 @@ TWEAK_CFLAGS += -fgcse-las \
                 -ftree-loop-ivcanon \
                 -fweb
                 
-HOSTCFLAGS += $(ARCHI_CFLAGS)
-HOSTCXXFLAGS += $(ARCHI_CFLAGS)
+HOSTCFLAGS += $(TWEAK_CFLAGS)
+HOSTCXXFLAGS += $(TWEAK_CFLAGS)
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -354,12 +354,12 @@ CHECK		= sparse
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-CFLAGS_MODULE   = $(ARCHI_CFLAGS)
+CFLAGS_MODULE   = $(TWEAK_CFLAGS)
 AFLAGS_MODULE   =
 LDFLAGS_MODULE  = --strip-debug -Wl --sort-common
-CFLAGS_KERNEL	= $(ARCHI_CFLAGS)
+CFLAGS_KERNEL	= $(TWEAK_CFLAGS)
 AFLAGS_KERNEL	=
-CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage $(ARCHI_CFLAGS)
+CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage $(TWEAK_CFLAGS)
 
 
 # Use USERINCLUDE when you must reference the UAPI directories only.
